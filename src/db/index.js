@@ -41,9 +41,9 @@ exports.getIndexActions = getIndexActions
 
 function create (options) {
   options = options || {}
-  if (options.createTableMs == null) options.createTableMs = 500
-  if (options.deleteTableMs == null) options.deleteTableMs = 500
-  if (options.updateTableMs == null) options.updateTableMs = 500
+  if (options.createTableMs == null) options.createTableMs = 0
+  if (options.deleteTableMs == null) options.deleteTableMs = 0
+  if (options.updateTableMs == null) options.updateTableMs = 0
   if (options.maxItemSizeKb == null) options.maxItemSizeKb = exports.MAX_SIZE / 1024
   options.maxItemSize = options.maxItemSizeKb * 1024
 

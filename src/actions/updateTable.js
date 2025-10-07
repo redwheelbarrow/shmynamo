@@ -1,6 +1,6 @@
 var db = require('../db')
 
-module.exports = function updateTable (store, data, cb) {
+module.exports = function updateTable(store, data, cb) {
 
   var key = data.TableName, tableDb = store.tableDb
 
@@ -87,8 +87,7 @@ module.exports = function updateTable (store, data, cb) {
       tableDb.put(key, table, function (err) {
         if (err) return cb(err)
 
-        setTimeout(function () {
-
+        function execFn() {
           // Shouldn't need to lock/fetch as nothing should have changed
           updates.forEach(function (update) {
             dataThroughput = update.dataThroughput
@@ -126,8 +125,13 @@ module.exports = function updateTable (store, data, cb) {
 
             if (err && !/Database is (not open|closed)/.test(err)) console.error(err.stack || err)
           })
+        }
 
-        }, store.options.updateTableMs)
+        if (store.options.updateTableMs <= 0) {
+          execFn()
+        } else {
+          setTimeout(execFn, store.options.updateTableMs)
+        }
 
         cb(null, { TableDescription: table })
       })
@@ -136,7 +140,7 @@ module.exports = function updateTable (store, data, cb) {
 
 }
 
-function getThroughputUpdates (data, table) {
+function getThroughputUpdates(data, table) {
   var tableBillingMode = (table.BillingModeSummary || {}).BillingMode || 'PROVISIONED'
   var remainingIndexes = (table.GlobalSecondaryIndexes || []).reduce(function (map, index) {
     map[index.IndexName] = true

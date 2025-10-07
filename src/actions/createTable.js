@@ -1,6 +1,6 @@
 var crypto = require('crypto')
 
-module.exports = function createTable (store, data, cb) {
+module.exports = function createTable(store, data, cb) {
 
   var key = data.TableName, tableDb = store.tableDb
 
@@ -33,7 +33,7 @@ module.exports = function createTable (store, data, cb) {
       // Table doesn't exist, create it
       createNewTable()
 
-      function createNewTable () {
+      function createNewTable() {
         data.TableArn = 'arn:aws:dynamodb:' + tableDb.awsRegion + ':' + tableDb.awsAccountId + ':table/' + data.TableName
         data.TableId = uuidV4()
         data.CreationDateTime = Date.now() / 1000
@@ -52,7 +52,7 @@ module.exports = function createTable (store, data, cb) {
         if (data.LocalSecondaryIndexes) {
           data.LocalSecondaryIndexes.forEach(function (index) {
             index.IndexArn = 'arn:aws:dynamodb:' + tableDb.awsRegion + ':' + tableDb.awsAccountId + ':table/' +
-            data.TableName + '/index/' + index.IndexName
+              data.TableName + '/index/' + index.IndexName
             index.IndexSizeBytes = 0
             index.ItemCount = 0
           })
@@ -60,7 +60,7 @@ module.exports = function createTable (store, data, cb) {
         if (data.GlobalSecondaryIndexes) {
           data.GlobalSecondaryIndexes.forEach(function (index) {
             index.IndexArn = 'arn:aws:dynamodb:' + tableDb.awsRegion + ':' + tableDb.awsAccountId + ':table/' +
-            data.TableName + '/index/' + index.IndexName
+              data.TableName + '/index/' + index.IndexName
             index.IndexSizeBytes = 0
             index.ItemCount = 0
             index.IndexStatus = 'CREATING'
@@ -73,9 +73,7 @@ module.exports = function createTable (store, data, cb) {
 
         tableDb.put(key, data, function (err) {
           if (err) return cb(err)
-
-          setTimeout(function () {
-
+          function execFn() {
             // Shouldn't need to lock/fetch as nothing should have changed
             data.TableStatus = 'ACTIVE'
             if (data.GlobalSecondaryIndexes) {
@@ -93,7 +91,12 @@ module.exports = function createTable (store, data, cb) {
               if (err && !/Database is (not open|closed)/.test(err)) console.error(err.stack || err)
             })
 
-          }, store.options.createTableMs)
+          }
+          if (store.options.createTableMs <= 0) {
+            execFn()
+          } else {
+            setTimeout(execFn, store.options.createTableMs)
+          }
 
           cb(null, { TableDescription: data })
         })
@@ -103,7 +106,7 @@ module.exports = function createTable (store, data, cb) {
 
 }
 
-function uuidV4 () {
+function uuidV4() {
   var bytes = crypto.randomBytes(14).toString('hex')
   return bytes.slice(0, 8) + '-' + bytes.slice(8, 12) + '-4' + bytes.slice(13, 16) + '-' +
     bytes.slice(16, 20) + '-' + bytes.slice(20, 28)

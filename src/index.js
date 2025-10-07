@@ -40,12 +40,7 @@ module.exports.httpHandler = httpHandler
  * @returns {http.Server | https.Server} - The Dynalite server
  */
 function dynalite (options) {
-  options = {
-    createTableMs: 0,
-    updateTableMs: 0,
-    deleteTableMs: 0,
-    ...(options || {}),
-  }
+  options = options || {}
   if (options.verbose) verbose = true
   if (options.debug) debug = true
 

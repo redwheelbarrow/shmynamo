@@ -1,12 +1,13 @@
 {
   "name": "@valkonis/shmynamo",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "An implementation of Amazon's DynamoDB built on LevelDB",
   "homepage": "https://github.com/redwheelbarrow/shmynamo",
   "repository": {
     "type": "git",
     "url": "https://github.com/redwheelbarrow/shmynamo"
   },
+  "types": "./src/index.d.ts",
   "bugs": "https://github.com/redwheelbarrow/shmynamo/issues",
   "exports": "./src/index.js",
   "main": "src/index.js",
@@ -34,6 +35,7 @@
   "author": "Michael Hart <michael.hart.au@gmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/node": "^24.7.0",
     "async": "^3.2.4",
     "big.js": "^6.2.1",
     "buffer-crc32": "^0.2.13",
@@ -52,7 +54,8 @@
     "mocha": "^11.7.2",
     "nyc": "^17.1.0",
     "pegjs": "^0.10.0",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "typescript": "^5.9.3"
   },
   "keywords": [
     "aws",
