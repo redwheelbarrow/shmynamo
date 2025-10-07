@@ -1,6 +1,6 @@
 var async = require('async')
 
-module.exports = function deleteTable (store, data, cb) {
+module.exports = function deleteTable(store, data, cb) {
 
   var key = data.TableName, tableDb = store.tableDb
 
@@ -32,28 +32,33 @@ module.exports = function deleteTable (store, data, cb) {
 
     table.TableStatus = 'DELETING'
 
-    var deletes = [ store.deleteItemDb.bind(store, key), store.deleteTagDb.bind(store, key) ]
-    ;[ 'Local', 'Global' ].forEach(function (indexType) {
-      var indexes = table[indexType + 'SecondaryIndexes'] || []
-      deletes = deletes.concat(indexes.map(function (index) {
-        return store.deleteIndexDb.bind(store, indexType, table.TableName, index.IndexName)
-      }))
-    })
+    var deletes = [store.deleteItemDb.bind(store, key), store.deleteTagDb.bind(store, key)]
+      ;['Local', 'Global'].forEach(function (indexType) {
+        var indexes = table[indexType + 'SecondaryIndexes'] || []
+        deletes = deletes.concat(indexes.map(function (index) {
+          return store.deleteIndexDb.bind(store, indexType, table.TableName, index.IndexName)
+        }))
+      })
 
     delete table.GlobalSecondaryIndexes
 
     tableDb.put(key, table, function (err) {
       if (err) return cb(err)
 
+      function execFn() {
+        tableDb.del(key, function (err) {
+          if (err && !/Database is (not open|closed)/.test(err)) console.error(err.stack || err)
+        })
+      }
+
       async.parallel(deletes, function (err) {
         if (err) return cb(err)
 
-        setTimeout(function () {
-          tableDb.del(key, function (err) {
-
-            if (err && !/Database is (not open|closed)/.test(err)) console.error(err.stack || err)
-          })
-        }, store.options.deleteTableMs)
+        if (store.options.deleteTableMs <= 0) {
+          execFn()
+        } else {
+          setTimeout(execFn, store.options.deleteTableMs)
+        }
 
         cb(null, { TableDescription: table })
       })

@@ -1,0 +1,10 @@
+export function checkTypes(data: any, types: any): {};
+export function checkValidations(data: any, validations: any, custom: any, store: any): void;
+export function toLowerFirst(str: any): any;
+export function findDuplicate(arr: any): any;
+export function validateAttributeValue(value: any): any;
+export function validateConditions(conditions: any): any;
+export function validateAttributeConditions(data: any): any;
+export function validateExpressionParams(data: any, expressions: any, nonExpressions: any): string;
+export function validateExpressions(data: any): string;
+export function convertKeyCondition(expression: any): any;

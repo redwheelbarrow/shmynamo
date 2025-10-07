@@ -1,0 +1,54 @@
+export const MAX_SIZE: 409600;
+export function create(options: any): {
+    options: any;
+    db: Level<string, string> | MemoryLevel<string, string>;
+    tableDb: any;
+    getItemDb: (name: any) => any;
+    deleteItemDb: (name: any, cb: any) => void;
+    getIndexDb: (indexType: any, tableName: any, indexName: any) => any;
+    deleteIndexDb: (indexType: any, tableName: any, indexName: any, cb: any) => void;
+    getTagDb: (name: any) => any;
+    deleteTagDb: (name: any, cb: any) => void;
+    getTable: (name: any, checkStatus: any, cb: any) => void;
+    recreate: () => void;
+    lifecycleManager: any;
+};
+declare function lazyStream(stream: any, errHandler: any): any;
+export function validateKey(dataKey: any, table: any, keySchema: any): any;
+export function validateItem(dataItem: any, table: any): any;
+export function validateUpdates(attributeUpdates: any, expressionUpdates: any, table: any): any;
+export function validateKeyPiece(key: any, attr: any, type: any, isHash: any): Error;
+export function validateKeyPaths(nestedPaths: any, table: any): any;
+export function createKey(item: any, table: any, keySchema: any): undefined;
+export function createIndexKey(item: any, table: any, keySchema: any): any;
+export function traverseKey(table: any, keySchema: any, visitKey: any): any;
+export function traverseIndexes(table: any, visitIndex: any): any;
+export function toRangeStr(keyPiece: any, type: any): any;
+export function toLexiStr(keyPiece: any, type: any): any;
+export function hashPrefix(hashKey: any, hashType: any, rangeKey: any, rangeType: any): string;
+export function validationError(msg: any): Error;
+export function limitError(msg: any): Error;
+export function checkConditional(data: any, existingItem: any): Error;
+export function itemSize(item: any, compress: any, addMetaSize: any, rangeKey: any): any;
+export function capacityUnits(item: any, isRead: any, isConsistent: any): number;
+export function addConsumedCapacity(data: any, isRead: any, newItem: any, oldItem: any): {
+    CapacityUnits: number;
+    TableName: any;
+    Table: {
+        CapacityUnits: number;
+    };
+};
+export function matchesFilter(val: any, filter: any, conditionalOperator: any): boolean;
+export function matchesExprFilter(item: any, expr: any): any;
+export function compare(comp: any, val: any, compVals: any): any;
+export function mapPaths(paths: any, item: any): any;
+export function mapPath(path: any, item: any): any;
+export function queryTable(store: any, table: any, data: any, opts: any, isLocal: any, fetchFromItemDb: any, startKeyNames: any, cb: any): void;
+export function updateIndexes(store: any, table: any, existingItem: any, item: any, cb: any): any;
+export function getIndexActions(indexes: any, existingItem: any, item: any, table: any): {
+    puts: any[];
+    deletes: any[];
+};
+import { Level } from "level";
+import { MemoryLevel } from "memory-level";
+export { lazyStream as lazy };
