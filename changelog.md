@@ -1,5 +1,8 @@
 # Dynalite changelog
 
+## [4.0.1]
+Renamed to @valkonis/shmynamo and refactored for in memory use
+
 ---
 
 ## [4.0.0]
